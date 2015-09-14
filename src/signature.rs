@@ -146,9 +146,9 @@ impl <'a> SignedRequest <'a> {
 			Some(ref h) => h.to_string(),
 			None => build_hostname(&self.service, &self.region)
 		};
-
 		// Gotta remove and re-add headers since by default they append the value.  If we're following
 		// a 307 redirect we end up with Three Stooges in the headers with duplicate values.
+
 		self.remove_header("host");
 		self.add_header("host", &hostname);
 
@@ -197,7 +197,7 @@ impl <'a> SignedRequest <'a> {
 				self.add_header("content-length", &format!("{}", payload.len()));
 			}
 		}
-		
+
 		self.remove_header("content-type");
 		let content_type = match self.content_type {
 			Some(ref ct) => ct.to_string(),

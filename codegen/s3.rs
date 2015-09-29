@@ -11217,6 +11217,7 @@ impl<'a> S3Client<'a> {
 		}
 
 		match input.content_md5 {
+			// The base64-encoded 128-bit MD5 digest of the message
 			Some(ref md5) => request.add_header("Content-MD5", &md5),
 			None => (),
 		}

@@ -19,6 +19,10 @@ use std::io::Read;
 use std::ascii::AsciiExt;
 use openssl::crypto::hash::Type::MD5;
 use openssl::crypto::hash::hash;
+<<<<<<< HEAD
+=======
+use serialize::hex::ToHex;
+>>>>>>> Checkpoint for adding content-md5 header to s3 put object.
 use serialize::base64::{ToBase64, STANDARD};
 
 // include the code generated from the SQS botocore templates
@@ -154,8 +158,12 @@ impl<'a> S3Helper<'a> {
 		result
 	}
 
+<<<<<<< HEAD
 	/// Uploads object: lets sender specify options.
 	/// The most generic of put_object: caller specifies the whole request.
+=======
+	// The most generic of put_object: caller specifies the whole request.
+>>>>>>> Checkpoint for adding content-md5 header to s3 put object.
 	pub fn put_object_with_request(&mut self, request: &mut PutObjectRequest) -> Result<PutObjectOutput, AWSError> {
 		// This may be where we do some basic sanity checking: ensure we have:
 		// bucket name, region, object id, payload.

@@ -53,8 +53,8 @@ fn thing() {
 		Err(err) => { println!("Got error in s3 list buckets: {}", err); }
 	}
 
-	let mut bucket_name = format!("rusoto{}", get_time().sec);
-	// let bucket_name = "rusoto1440826511";
+	// let mut bucket_name = format!("rusoto{}", get_time().sec);
+	let bucket_name = "rusoto1440826511";
 
 	match s3_create_bucket_test(&mut s3, &bucket_name, &region, None) {
 		Ok(_) => { println!("Everything worked for S3 create bucket."); },
@@ -70,6 +70,11 @@ fn thing() {
 		Ok(_) => println!("Everything worked for S3 put object."),
 		Err(err) => println!("Got error in s3 put object: {}", err),
 	}
+
+	// match s3_put_object_test(&mut s3, &bucket_name) {
+	// 	Ok(_) => println!("Everything worked for S3 put object."),
+	// 	Err(err) => println!("Got error in s3 put object: {:#?}", err),
+	// }
 
 	match s3_get_object_test(&mut s3, &bucket_name) {
 		Ok(result) => {

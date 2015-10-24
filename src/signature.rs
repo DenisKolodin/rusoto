@@ -14,7 +14,7 @@ use openssl::crypto::hash::Type::SHA256;
 use openssl::crypto::hash::hash;
 use openssl::crypto::hmac::hmac;
 use params::Params;
-use serialize::hex::ToHex;
+use rustc_serialize::hex::ToHex;
 use std::ascii::AsciiExt;
 use std::collections::BTreeMap;
 use std::collections::btree_map::Entry;
@@ -204,7 +204,7 @@ impl <'a> SignedRequest <'a> {
 			None => "application/octet-stream".to_string()
 		};
 
-		self.add_header("content-type", &content_type);
+		self.add_header("content-type", &ct);
 
 		// use the hashed canonical request to build the string to sign
 		let hashed_canonical_request = to_hexdigest_from_string(&canonical_request);
@@ -218,7 +218,7 @@ impl <'a> SignedRequest <'a> {
 		// build the actual auth header
 		let auth_header = format!("AWS4-HMAC-SHA256 Credential={}/{}, SignedHeaders={}, Signature={}",
 	               &creds.get_aws_access_key_id(), scope, signed_headers, signature);
-	   self.remove_header("authorization");
+		self.remove_header("authorization");
 		self.add_header("authorization", &auth_header);
 
 		let response = send_request(&self);

@@ -14,20 +14,29 @@ use std::fs::File;
 use std::io::Write;
 use std::io::Read;
 use rusoto::signature::SignedRequest;
+use rustc_serialize::json;
+
+#[derive(RustcDecodable, Debug)]
+struct ListTablesResponse {
+    TableNames: Vec<String>
+}
+
 fn main() {
-	let mut creds = DefaultAWSCredentialsProviderChain::new();
-	let region = Region::UsEast1;
+    let mut creds = DefaultAWSCredentialsProviderChain::new();
+    let region = Region::UsEast1;
 
-	let mut request = SignedRequest::new("POST", "dynamodb", &region, "/");
-	request.set_content_type("application/x-amz-json-1.0".to_string());
-	request.add_header("x-amz-target", "DynamoDB_20120810.ListTables");
-	request.set_payload(Some(b"{\"Limit\": 100}"));
+    let mut request = SignedRequest::new("POST", "dynamodb", &region, "/");
+    request.set_content_type("application/x-amz-json-1.0".to_string());
+    request.add_header("x-amz-target", "DynamoDB_20120810.ListTables");
+    request.set_payload(Some(b"{\"Limit\": 100}"));
 
-	let mut result = request.sign_and_execute(creds.get_credentials().ok().unwrap());
-	let status = result.status.to_u16();
-	let mut body = String::new();
+    let mut result = request.sign_and_execute(creds.get_credentials().ok().unwrap());
+    let status = result.status.to_u16();
+    let mut body = String::new();
     result.read_to_string(&mut body).unwrap();
     println!("{}", body);
+    let decoded: ListTablesResponse = json::decode(&body).unwrap();
+    println!("{:#?}", decoded);
 
 }
 
@@ -159,167 +168,199 @@ fn thing() {
 	}
 }
 
-fn s3_list_multipart_upload_parts(s3: &mut S3Helper, bucket: &str, object: &str, upload_id: &str) -> Result<(), AWSError> {
-	match s3.multipart_upload_list_parts(bucket, object, upload_id) {
-		Err(why) => println!("Error listing multipart upload parts: {:?}", why),
-		Ok(result) => println!("Multipart upload parts: {:?}", result),
-	}
-	Ok(())
+fn s3_list_multipart_upload_parts(s3: &mut S3Helper,
+                                  bucket: &str,
+                                  object: &str,
+                                  upload_id: &str)
+                                  -> Result<(), AWSError> {
+    match s3.multipart_upload_list_parts(bucket, object, upload_id) {
+        Err(why) => println!("Error listing multipart upload parts: {:?}", why),
+        Ok(result) => println!("Multipart upload parts: {:?}", result),
+    }
+    Ok(())
 }
 
 fn s3_list_multipart_uploads(s3: &mut S3Helper, bucket: &str) -> Result<(), AWSError> {
-	match s3.list_multipart_uploads_for_bucket(bucket) {
-		Err(why) => println!("Error listing multipart uploads: {:?}", why),
-		Ok(result) => println!("in-progress multipart uploads: {:?}", result),
-	}
-	Ok(())
+    match s3.list_multipart_uploads_for_bucket(bucket) {
+        Err(why) => println!("Error listing multipart uploads: {:?}", why),
+        Ok(result) => println!("in-progress multipart uploads: {:?}", result),
+    }
+    Ok(())
 }
 
-fn s3_abort_multipart_uploads(s3: &mut S3Helper, bucket: &str, object: &str, upload_id: &str) -> Result<(), AWSError> {
-	match s3.abort_multipart_upload(bucket, object, upload_id) {
-		Err(why) => println!("Error aborting multipart upload: {:?}", why),
-		Ok(result) => println!("aborted multipart upload: {:?}", result),
-	}
-	Ok(())
+fn s3_abort_multipart_uploads(s3: &mut S3Helper,
+                              bucket: &str,
+                              object: &str,
+                              upload_id: &str)
+                              -> Result<(), AWSError> {
+    match s3.abort_multipart_upload(bucket, object, upload_id) {
+        Err(why) => println!("Error aborting multipart upload: {:?}", why),
+        Ok(result) => println!("aborted multipart upload: {:?}", result),
+    }
+    Ok(())
 }
 
 fn s3_list_buckets_tests(s3: &mut S3Helper) -> Result<(), AWSError> {
-	let response = try!(s3.list_buckets());
-	for q in response.buckets {
-		println!("Existing bucket: {:?}", q.name);
-	}
+    let response = try!(s3.list_buckets());
+    for q in response.buckets {
+        println!("Existing bucket: {:?}", q.name);
+    }
 
-	Ok(())
+    Ok(())
 }
 
 fn s3_get_object_test(s3: &mut S3Helper, bucket: &str) -> Result<GetObjectOutput, AWSError> {
-	let response = try!(s3.get_object(bucket, "sample-credentials"));
-	Ok(response)
+    let response = try!(s3.get_object(bucket, "sample-credentials"));
+    Ok(response)
 }
 
-fn s3_delete_object_test(s3: &mut S3Helper, bucket: &str, object_name: &str) -> Result<DeleteObjectOutput, AWSError> {
-	let response = try!(s3.delete_object(bucket, object_name));
-	Ok(response)
+fn s3_delete_object_test(s3: &mut S3Helper,
+                         bucket: &str,
+                         object_name: &str)
+                         -> Result<DeleteObjectOutput, AWSError> {
+    let response = try!(s3.delete_object(bucket, object_name));
+    Ok(response)
 }
 
-fn s3_put_object_aws_encryption_test(s3: &mut S3Helper, bucket: &str) -> Result<PutObjectOutput, AWSError> {
-	let mut f = File::open("src/sample-credentials").unwrap();
-	let mut contents : Vec<u8> = Vec::new();
-	match f.read_to_end(&mut contents) {
-		Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
-		Ok(_) => {
-			let response = try!(s3.put_object_with_aws_encryption(bucket, "sample-credentials", &contents));
-			Ok(response)
-		}
-	}
+fn s3_put_object_aws_encryption_test(s3: &mut S3Helper,
+                                     bucket: &str)
+                                     -> Result<PutObjectOutput, AWSError> {
+    let mut f = File::open("src/sample-credentials").unwrap();
+    let mut contents: Vec<u8> = Vec::new();
+    match f.read_to_end(&mut contents) {
+        Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
+        Ok(_) => {
+            let response = try!(s3.put_object_with_aws_encryption(bucket,
+                                                                  "sample-credentials",
+                                                                  &contents));
+            Ok(response)
+        }
+    }
 }
 
-fn s3_put_object_kms_encryption_test(s3: &mut S3Helper, bucket: &str) -> Result<PutObjectOutput, AWSError> {
-	let mut f = File::open("src/sample-credentials").unwrap();
-	let mut contents : Vec<u8> = Vec::new();
-	match f.read_to_end(&mut contents) {
-		Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
-		Ok(_) => {
-			let response = try!(s3.put_object_with_kms_encryption(bucket, "sample-credentials", &contents, "key-id"));
-			Ok(response)
-		}
-	}
+fn s3_put_object_kms_encryption_test(s3: &mut S3Helper,
+                                     bucket: &str)
+                                     -> Result<PutObjectOutput, AWSError> {
+    let mut f = File::open("src/sample-credentials").unwrap();
+    let mut contents: Vec<u8> = Vec::new();
+    match f.read_to_end(&mut contents) {
+        Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
+        Ok(_) => {
+            let response = try!(s3.put_object_with_kms_encryption(bucket,
+                                                                  "sample-credentials",
+                                                                  &contents,
+                                                                  "key-id"));
+            Ok(response)
+        }
+    }
 }
 
 fn s3_put_object_test(s3: &mut S3Helper, bucket: &str) -> Result<PutObjectOutput, AWSError> {
-	let mut f = File::open("src/sample-credentials").unwrap();
-	let mut contents : Vec<u8> = Vec::new();
-	match f.read_to_end(&mut contents) {
-		Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
-		Ok(_) => {
-			let response = try!(s3.put_object(bucket, "sample-credentials", &contents));
-			Ok(response)
-		}
-	}
+    let mut f = File::open("src/sample-credentials").unwrap();
+    let mut contents: Vec<u8> = Vec::new();
+    match f.read_to_end(&mut contents) {
+        Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
+        Ok(_) => {
+            let response = try!(s3.put_object(bucket, "sample-credentials", &contents));
+            Ok(response)
+        }
+    }
 }
 
-fn s3_put_object_with_request_specified_test(s3: &mut S3Helper, bucket: &str) -> Result<PutObjectOutput, AWSError> {
-	let mut f = File::open("src/sample-credentials").unwrap();
-	let mut contents : Vec<u8> = Vec::new();
-	match f.read_to_end(&mut contents) {
-		Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
-		Ok(_) => {
-			let mut request = PutObjectRequest::default();
-			request.key = "sample-credentials".to_string();
-			request.bucket = bucket.to_string();
-			request.body = Some(&contents);
-			// request.content_md5 = Some("foo".to_string());
+fn s3_put_object_with_request_specified_test(s3: &mut S3Helper,
+                                             bucket: &str)
+                                             -> Result<PutObjectOutput, AWSError> {
+    let mut f = File::open("src/sample-credentials").unwrap();
+    let mut contents: Vec<u8> = Vec::new();
+    match f.read_to_end(&mut contents) {
+        Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
+        Ok(_) => {
+            let mut request = PutObjectRequest::default();
+            request.key = "sample-credentials".to_string();
+            request.bucket = bucket.to_string();
+            request.body = Some(&contents);
+            // request.content_md5 = Some("foo".to_string());
 
-			let response = try!(s3.put_object_with_request(&mut request));
+            let response = try!(s3.put_object_with_request(&mut request));
 
-			Ok(response)
-		}
-	}
+            Ok(response)
+        }
+    }
 }
 
 fn s3_multipart_upload_test(s3: &mut S3Helper, bucket: &str) -> Result<PutObjectOutput, AWSError> {
-	// Set to a > 5 MB file for testing:
-	let mut f = File::open("testfile.zip").unwrap();
+    // Set to a > 5 MB file for testing:
+    let mut f = File::open("testfile.zip").unwrap();
 
-	let response = try!(s3.put_multipart_object(bucket, "testfile.zip", &mut f));
-	Ok(response)
+    let response = try!(s3.put_multipart_object(bucket, "testfile.zip", &mut f));
+    Ok(response)
 }
 
-fn s3_put_object_with_reduced_redundancy_test(s3: &mut S3Helper, bucket: &str) -> Result<PutObjectOutput, AWSError> {
-	let mut f = File::open("src/sample-credentials").unwrap();
-	let mut contents = Vec::new();
-	match f.read_to_end(&mut contents) {
-		Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
-		Ok(_) => {
-			let response = try!(s3.put_object_with_reduced_redundancy(bucket, "sample-credentials", &contents));
-			Ok(response)
-		}
-	}
+fn s3_put_object_with_reduced_redundancy_test(s3: &mut S3Helper,
+                                              bucket: &str)
+                                              -> Result<PutObjectOutput, AWSError> {
+    let mut f = File::open("src/sample-credentials").unwrap();
+    let mut contents = Vec::new();
+    match f.read_to_end(&mut contents) {
+        Err(why) => return Err(AWSError::new(format!("Error opening file to send to S3: {}", why))),
+        Ok(_) => {
+            let response = try!(s3.put_object_with_reduced_redundancy(bucket,
+                                                                      "sample-credentials",
+                                                                      &contents));
+            Ok(response)
+        }
+    }
 }
 
-fn s3_create_bucket_test(s3: &mut S3Helper, bucket: &str, region: &Region, canned_acl: Option<CannedAcl>) -> Result<(), AWSError> {
-	try!(s3.create_bucket_in_region(bucket, &region, canned_acl));
+fn s3_create_bucket_test(s3: &mut S3Helper,
+                         bucket: &str,
+                         region: &Region,
+                         canned_acl: Option<CannedAcl>)
+                         -> Result<(), AWSError> {
+    try!(s3.create_bucket_in_region(bucket, &region, canned_acl));
 
-	Ok(())
+    Ok(())
 }
 
 fn s3_delete_bucket_test(s3: &mut S3Helper, bucket: &str, region: &Region) -> Result<(), AWSError> {
-	try!(s3.delete_bucket(bucket, &region));
-	Ok(())
+    try!(s3.delete_bucket(bucket, &region));
+    Ok(())
 }
 
 fn sqs_roundtrip_tests(sqs: &mut SQSHelper) -> Result<(), AWSError> {
-	// list existing queues
-	let response = try!(sqs.list_queues());
-	for q in response.queue_urls {
-		println!("Existing queue: {}", q);
-	}
+    // list existing queues
+    let response = try!(sqs.list_queues());
+    for q in response.queue_urls {
+        println!("Existing queue: {}", q);
+    }
 
-	// create a new queue
-	let q_name = &format!("test_q_{}", get_time().sec);
-	let response = try!(sqs.create_queue(q_name));
-	println!("Created queue {} with url {}", q_name, response.queue_url);
+    // create a new queue
+    let q_name = &format!("test_q_{}", get_time().sec);
+    let response = try!(sqs.create_queue(q_name));
+    println!("Created queue {} with url {}", q_name, response.queue_url);
 
-	// query it by name
-	let response = try!(sqs.get_queue_url(q_name));
-	let queue_url = &response.queue_url;
-	println!("Verified queue url {} for queue name {}", queue_url, q_name);
+    // query it by name
+    let response = try!(sqs.get_queue_url(q_name));
+    let queue_url = &response.queue_url;
+    println!("Verified queue url {} for queue name {}", queue_url, q_name);
 
-	// send it a message
-	let msg_str = "lorem ipsum dolor sit amet";
-	let response = try!(sqs.send_message(queue_url, msg_str));
-	println!("Send message with body '{}' and created message_id {}", msg_str, response.message_id);
+    // send it a message
+    let msg_str = "lorem ipsum dolor sit amet";
+    let response = try!(sqs.send_message(queue_url, msg_str));
+    println!("Send message with body '{}' and created message_id {}",
+             msg_str,
+             response.message_id);
 
-	// receive a message
-	let response = try!(sqs.receive_message(queue_url));
-	for msg in response.messages {
-		println!("Received message '{}' with id {}", msg.body, msg.message_id);
-		try!(sqs.delete_message(queue_url, &msg.receipt_handle));
-	}
+    // receive a message
+    let response = try!(sqs.receive_message(queue_url));
+    for msg in response.messages {
+        println!("Received message '{}' with id {}", msg.body, msg.message_id);
+        try!(sqs.delete_message(queue_url, &msg.receipt_handle));
+    }
 
-	// delete the queue
-	try!(sqs.delete_queue(queue_url));
-	println!("Queue {} deleted", queue_url);
+    // delete the queue
+    try!(sqs.delete_queue(queue_url));
+    println!("Queue {} deleted", queue_url);
 
-	Ok(())
+    Ok(())
 }

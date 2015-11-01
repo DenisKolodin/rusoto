@@ -1654,7 +1654,7 @@ pub struct AttributeValueUpdate {
 	pub Value: Option<AttributeValue>,
 }
 
-pub type Date = String;
+pub type Date = f64;
 pub type Integer = i32;
 /// Represents the output of a _DeleteItem_ operation.
 #[derive(Debug, Default, RustcDecodable, RustcEncodable)]
@@ -2720,7 +2720,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// status changes from `ACTIVE` to `UPDATING`. While it is `UPDATING`, you cannot
 	/// issue another _UpdateTable_ request. When the table returns to the `ACTIVE`
 	/// state, the _UpdateTable_ operation is complete.
-	pub fn update_table(&mut self, input: &UpdateTableInput) -> Result<UpdateTableOutput, AWSError> {
+	pub fn update_table(&mut self, input: &UpdateTableInput) -> Result<UpdateTableOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2735,7 +2735,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: UpdateTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// The _DeleteTable_ operation deletes a table and all of its items. After a
@@ -2753,7 +2755,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// stream on that table goes into the `DISABLED` state, and the stream is
 	/// automatically deleted after 24 hours.
 	/// Use the _DescribeTable_ API to check the status of the table.
-	pub fn delete_table(&mut self, input: &DeleteTableInput) -> Result<DeleteTableOutput, AWSError> {
+	pub fn delete_table(&mut self, input: &DeleteTableInput) -> Result<DeleteTableOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2768,7 +2770,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: DeleteTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// The _BatchGetItem_ operation returns the attributes of one or more items from
@@ -2815,7 +2819,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// type of read. For more information, see [Capacity Units Calculations](http://d
 	/// ocs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.html
 	/// #CapacityUnitCalculations) in the _Amazon DynamoDB Developer Guide_.
-	pub fn batch_get_item(&mut self, input: &BatchGetItemInput) -> Result<BatchGetItemOutput, AWSError> {
+	pub fn batch_get_item(&mut self, input: &BatchGetItemInput) -> Result<BatchGetItemOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2830,7 +2834,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: BatchGetItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// The _Scan_ operation returns one or more items and item attributes by
@@ -2850,7 +2856,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// By default, _Scan_ uses eventually consistent reads when acessing the data in
 	/// the table or local secondary index. However, you can use strongly consistent
 	/// reads instead by setting the _ConsistentRead_ parameter to _true_.
-	pub fn scan(&mut self, input: &ScanInput) -> Result<ScanOutput, AWSError> {
+	pub fn scan(&mut self, input: &ScanInput) -> Result<ScanOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2865,7 +2871,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: ScanOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// Returns information about the table, including the current status of the
@@ -2876,7 +2884,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// DescribeTable uses an eventually consistent query, and the metadata for your
 	/// table might not be available at that moment. Wait for a few seconds, and then
 	/// try the DescribeTable request again.
-	pub fn describe_table(&mut self, input: &DescribeTableInput) -> Result<DescribeTableOutput, AWSError> {
+	pub fn describe_table(&mut self, input: &DescribeTableInput) -> Result<DescribeTableOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2891,7 +2899,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: DescribeTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// The _BatchWriteItem_ operation puts or deletes multiple items in one or more
@@ -2948,7 +2958,7 @@ impl<'a> DynamoDBClient<'a> {
 	///   * There are more than 25 requests in the batch.
 	///   * Any individual item in a batch exceeds 400 KB.
 	///   * The total request size exceeds 16 MB.
-	pub fn batch_write_item(&mut self, input: &BatchWriteItemInput) -> Result<BatchWriteItemOutput, AWSError> {
+	pub fn batch_write_item(&mut self, input: &BatchWriteItemInput) -> Result<BatchWriteItemOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2963,7 +2973,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: BatchWriteItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// The _CreateTable_ operation adds a new table to your account. In an AWS
@@ -2978,7 +2990,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// indexes on them, you must create the tables sequentially. Only one table with
 	/// secondary indexes can be in the `CREATING` state at any given time.
 	/// You can use the _DescribeTable_ API to check the table status.
-	pub fn create_table(&mut self, input: &CreateTableInput) -> Result<CreateTableOutput, AWSError> {
+	pub fn create_table(&mut self, input: &CreateTableInput) -> Result<CreateTableOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -2993,13 +3005,15 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: CreateTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// Returns an array of table names associated with the current account and
 	/// endpoint. The output from _ListTables_ is paginated, with each page returning
 	/// a maximum of 100 table names.
-	pub fn list_tables(&mut self, input: &ListTablesInput) -> Result<ListTablesOutput, AWSError> {
+	pub fn list_tables(&mut self, input: &ListTablesInput) -> Result<ListTablesOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -3014,7 +3028,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: ListTablesOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// The _GetItem_ operation returns a set of attributes for the item with the
@@ -3024,7 +3040,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// application requires a strongly consistent read, set _ConsistentRead_ to
 	/// `true`. Although a strongly consistent read might take more time than an
 	/// eventually consistent read, it always returns the last updated value.
-	pub fn get_item(&mut self, input: &GetItemInput) -> Result<GetItemOutput, AWSError> {
+	pub fn get_item(&mut self, input: &GetItemInput) -> Result<GetItemOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -3039,7 +3055,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: GetItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// A _Query_ operation uses the primary key of a table or a secondary index to
@@ -3064,7 +3082,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// _ConsistentRead_ parameter to `true` and obtain a strongly consistent result.
 	/// Global secondary indexes support eventually consistent reads only, so do not
 	/// specify _ConsistentRead_ when querying a global secondary index.
-	pub fn query(&mut self, input: &QueryInput) -> Result<QueryOutput, AWSError> {
+	pub fn query(&mut self, input: &QueryInput) -> Result<QueryOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -3079,7 +3097,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: QueryOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// Creates a new item, or replaces an old item with a new item. If an item that
@@ -3104,7 +3124,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// For more information about using this API, see [Working with Items](http://doc
 	/// s.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithItems.html)
 	/// in the _Amazon DynamoDB Developer Guide_.
-	pub fn put_item(&mut self, input: &PutItemInput) -> Result<PutItemOutput, AWSError> {
+	pub fn put_item(&mut self, input: &PutItemInput) -> Result<PutItemOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -3119,7 +3139,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: PutItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// Edits an existing item's attributes, or adds a new item to the table if it
@@ -3130,7 +3152,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// item does not exist, then the operation fails and a new item is not created.
 	/// You can also return the item's attribute values in the same _UpdateItem_
 	/// operation using the _ReturnValues_ parameter.
-	pub fn update_item(&mut self, input: &UpdateItemInput) -> Result<UpdateItemOutput, AWSError> {
+	pub fn update_item(&mut self, input: &UpdateItemInput) -> Result<UpdateItemOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -3145,7 +3167,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: UpdateItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 	/// Deletes a single item in a table by primary key. You can perform a conditional
@@ -3159,7 +3183,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// Conditional deletes are useful for deleting items only if specific conditions
 	/// are met. If those conditions are met, DynamoDB performs the delete. Otherwise,
 	/// the item is not deleted.
-	pub fn delete_item(&mut self, input: &DeleteItemInput) -> Result<DeleteItemOutput, AWSError> {
+	pub fn delete_item(&mut self, input: &DeleteItemInput) -> Result<DeleteItemOutput> {
 		let encoded = json::encode(&input).unwrap();
 		let mut request = SignedRequest::new("POST", "dynamodb", &self.region, "/");
 		request.set_content_type("application/x-amz-json-1.0".to_string());
@@ -3174,7 +3198,9 @@ impl<'a> DynamoDBClient<'a> {
 				let decoded: DeleteItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
-			_ => { Err(AWSError::new("error")) }
+			_ => {
+				Err(parse_error(&body))
+			}
 		}
 	}
 }

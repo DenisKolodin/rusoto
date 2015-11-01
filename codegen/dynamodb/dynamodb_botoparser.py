@@ -12,7 +12,7 @@ metadata = {}
 # map botocore primitives to rust primitives
 primitive_types = {
 	'string': 'String',
-	'timestamp': 'String',
+	'timestamp': 'f64',
 	'integer': 'i32',
         'long': 'i64',
         'float': 'f32',
@@ -129,11 +129,11 @@ def request_method(operation):
 	input_type = ''
 
 	if not ('input' in operation):
-		print "\tpub fn " + c_to_s(operation['name']) + "(&mut self"") -> Result<" + output_type + ", AWSError> {"
+		print "\tpub fn " + c_to_s(operation['name']) + "(&mut self"") -> Result<" + output_type + "> {"
 	else:
 		input_name = operation['input']['shape']
 		input_type = shapes[input_name]
-		print "\tpub fn " + c_to_s(operation['name']) + "(&mut self, input: &" + input_name + ") -> Result<" + output_type + ", AWSError> {"
+		print "\tpub fn " + c_to_s(operation['name']) + "(&mut self, input: &" + input_name + ") -> Result<" + output_type + "> {"
 
         print '\t\tlet encoded = json::encode(&input).unwrap();'
         print '\t\tlet mut request = SignedRequest::new("' + http['method'] + '", "' + metadata['endpointPrefix'] + '", &self.region, "' + http['requestUri'] + '");'
@@ -157,7 +157,9 @@ def request_method(operation):
                 print '\t\t\t\tOk(decoded)'
 	print '\t\t\t}'
 
-	print '\t\t\t_ => { Err(AWSError::new("error")) }'
+	print '\t\t\t_ => {'
+        print '\t\t\t\tErr(parse_error(&body))'
+        print '\t\t\t}'
 
 	print '\t\t}'
 	print "\t}"

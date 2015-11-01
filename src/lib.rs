@@ -37,7 +37,7 @@ extern crate chrono;
 #[macro_use] pub mod params;
 #[macro_use] pub mod signature;
 pub mod credentials;
-pub mod dynamodb;
+#[macro_use] pub mod dynamodb;
 pub mod error;
 pub mod sqs;
 pub mod s3;

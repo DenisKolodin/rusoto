@@ -33,6 +33,8 @@ pub struct AWSCredentials {
     expires_at: DateTime<UTC>
 }
 
+unsafe impl Sync for AWSCredentials{}
+
 impl AWSCredentials {
     pub fn new<K, S>(key:K, secret:S, token:Option<String>, expires_at:DateTime<UTC>) -> AWSCredentials where K:Into<String>, S:Into<String> {
         AWSCredentials {

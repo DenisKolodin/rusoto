@@ -29,7 +29,7 @@ extern crate xml;
 extern crate hyper;
 extern crate openssl;
 extern crate url;
-extern crate rustc_serialize;
+extern crate rustc_serialize as serialize;
 extern crate regex;
 extern crate crypto;
 extern crate chrono;

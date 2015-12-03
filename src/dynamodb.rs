@@ -140,13 +140,13 @@ macro_rules! val {
 	    	attr.B = Some($val);
 	    	attr
 	    }
-	)
+	);
 	(S => $val:expr) => (
 	    {
 			let mut attr = AttributeValue::default();
 			attr.S = Some($val.to_string());
 			attr
-		}		
+		}
 	);
 	(N => $val:expr) => (
 	    {
@@ -179,4 +179,3 @@ fn parse_error(body: &str) -> DynamoDBError {
 		DynamoDBError { __type: "DecodeError".to_string(), message: body.to_string() }
 	}
 }
-

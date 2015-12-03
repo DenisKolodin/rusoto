@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::error::Error;
-use rustc_serialize::json;
+use serialize::json;
 use std::io::Read;
 /// Represents the output of a _PutItem_ operation.
 #[derive(Debug, Default, RustcDecodable, RustcEncodable)]
@@ -159,25 +159,25 @@ pub struct PutItemInput {
 	/// _AttributeValue_ of a different type than the one provided in the request, the
 	/// value does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`.
 	/// Also, `{"N":"6"}` does not equal `{"NS":["6", "2", "1"]}`.
-	///     * `LE` : Less than or equal. 
+	///     * `LE` : Less than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `LT` : Less than. 
+	///     * `LT` : Less than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one provided in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GE` : Greater than or equal. 
+	///     * `GE` : Greater than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GT` : Greater than. 
+	///     * `GT` : Greater than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
@@ -216,7 +216,7 @@ pub struct PutItemInput {
 	/// match with any member of the set.
 	/// NOT_CONTAINS is supported for lists: When evaluating "`a NOT CONTAINS b`",
 	/// "`a`" can be a list; however, "`b`" cannot be a set, a map, or a list.
-	///     * `BEGINS_WITH` : Checks for a prefix. 
+	///     * `BEGINS_WITH` : Checks for a prefix.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String or
 	/// Binary (not a Number or a set type). The target attribute of the comparison
 	/// must be of type String or Binary (not a Number or a set type).
@@ -225,7 +225,7 @@ pub struct PutItemInput {
 	/// String, Number, or Binary (not a set type). These attributes are compared
 	/// against an existing set type attribute of an item. If any elements of the
 	/// input set are present in the item attribute, the expression evaluates to true.
-	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value. 
+	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value.
 	/// _AttributeValueList_ must contain two _AttributeValue_ elements of the same
 	/// type, either String, Number, or Binary (not a set type). A target attribute
 	/// matches if the target value is greater than, or equal to, the first element
@@ -350,7 +350,7 @@ pub struct BatchGetItemInput {
 	/// For more information, see [Accessing Item Attributes](http://docs.aws.amazon.c
 	/// om/amazondynamodb/latest/developerguide/Expressions.AccessingItemAttributes.ht
 	/// ml) in the _Amazon DynamoDB Developer Guide_.
-	///   * _AttributesToGet_ \- 
+	///   * _AttributesToGet_ \-
 	/// This is a legacy parameter, for backward compatibility. New applications
 	/// should use _ProjectionExpression_ instead. Do not combine legacy parameters
 	/// and expression parameters in a single API call; otherwise, DynamoDB will
@@ -759,10 +759,10 @@ pub struct UpdateItemInput {
 	/// Each _AttributeUpdates_ element consists of an attribute name to modify, along
 	/// with the following:
 	///   * _Value_ \- The new value, if applicable, for this attribute.
-	///   * _Action_ \- A value that specifies how to perform the update. This action is only valid for an existing attribute whose data type is Number or is a set; do not use `ADD` for other data types. 
+	///   * _Action_ \- A value that specifies how to perform the update. This action is only valid for an existing attribute whose data type is Number or is a set; do not use `ADD` for other data types.
 	/// If an item with the specified primary key is found in the table, the following
 	/// values perform the following actions:
-	///     * `PUT` \- Adds the specified attribute to the item. If the attribute already exists, it is replaced by the new value. 
+	///     * `PUT` \- Adds the specified attribute to the item. If the attribute already exists, it is replaced by the new value.
 	///     * `DELETE` \- Removes the attribute and its value, if no value is specified for `DELETE`. The data type of the specified value must match the existing value's data type.
 	/// If a set of values is specified, then those values are subtracted from the old
 	/// set. For example, if the attribute value was the set `[a,b,c]` and the
@@ -779,12 +779,12 @@ pub struct UpdateItemInput {
 	/// this attribute anyway. DynamoDB will create the _itemcount_ attribute, set its
 	/// initial value to `0`, and finally add `3` to it. The result will be a new
 	/// _itemcount_ attribute, with a value of `3`.
-	///       * If the existing data type is a set, and if _Value_ is also a set, then _Value_ is appended to the existing set. For example, if the attribute value is the set `[1,2]`, and the `ADD` action specified `[3]`, then the final attribute value is `[1,2,3]`. An error occurs if an `ADD` action is specified for a set attribute and the attribute type specified does not match the existing set type. 
+	///       * If the existing data type is a set, and if _Value_ is also a set, then _Value_ is appended to the existing set. For example, if the attribute value is the set `[1,2]`, and the `ADD` action specified `[3]`, then the final attribute value is `[1,2,3]`. An error occurs if an `ADD` action is specified for a set attribute and the attribute type specified does not match the existing set type.
 	/// Both sets must have the same primitive data type. For example, if the existing
 	/// data type is a set of strings, _Value_ must also be a set of strings.
 	/// If no item with the specified key is found in the table, the following values
 	/// perform the following actions:
-	///     * `PUT` \- Causes DynamoDB to create a new item with the specified primary key, and then adds the attribute. 
+	///     * `PUT` \- Causes DynamoDB to create a new item with the specified primary key, and then adds the attribute.
 	///     * `DELETE` \- Nothing happens, because attributes cannot be deleted from a nonexistent item. The operation succeeds, but DynamoDB does not create a new item.
 	///     * `ADD` \- Causes DynamoDB to create an item with the supplied primary key and number (or set of numbers) for the attribute value. The only data types allowed are Number and Number Set.
 	/// If you provide any attributes that are part of an index key, then the data
@@ -874,7 +874,7 @@ pub struct UpdateItemInput {
 	/// this attribute anyway. DynamoDB will create the _itemcount_ attribute, set its
 	/// initial value to `0`, and finally add `3` to it. The result will be a new
 	/// _itemcount_ attribute in the item, with a value of `3`.
-	///     * If the existing data type is a set and if _Value_ is also a set, then _Value_ is added to the existing set. For example, if the attribute value is the set `[1,2]`, and the `ADD` action specified `[3]`, then the final attribute value is `[1,2,3]`. An error occurs if an `ADD` action is specified for a set attribute and the attribute type specified does not match the existing set type. 
+	///     * If the existing data type is a set and if _Value_ is also a set, then _Value_ is added to the existing set. For example, if the attribute value is the set `[1,2]`, and the `ADD` action specified `[3]`, then the final attribute value is `[1,2,3]`. An error occurs if an `ADD` action is specified for a set attribute and the attribute type specified does not match the existing set type.
 	/// Both sets must have the same primitive data type. For example, if the existing
 	/// data type is a set of strings, the _Value_ must also be a set of strings.
 	/// The `ADD` action only supports Number and set data types. In addition, `ADD`
@@ -957,25 +957,25 @@ pub struct UpdateItemInput {
 	/// _AttributeValue_ of a different type than the one provided in the request, the
 	/// value does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`.
 	/// Also, `{"N":"6"}` does not equal `{"NS":["6", "2", "1"]}`.
-	///     * `LE` : Less than or equal. 
+	///     * `LE` : Less than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `LT` : Less than. 
+	///     * `LT` : Less than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one provided in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GE` : Greater than or equal. 
+	///     * `GE` : Greater than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GT` : Greater than. 
+	///     * `GT` : Greater than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
@@ -1014,7 +1014,7 @@ pub struct UpdateItemInput {
 	/// match with any member of the set.
 	/// NOT_CONTAINS is supported for lists: When evaluating "`a NOT CONTAINS b`",
 	/// "`a`" can be a list; however, "`b`" cannot be a set, a map, or a list.
-	///     * `BEGINS_WITH` : Checks for a prefix. 
+	///     * `BEGINS_WITH` : Checks for a prefix.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String or
 	/// Binary (not a Number or a set type). The target attribute of the comparison
 	/// must be of type String or Binary (not a Number or a set type).
@@ -1023,7 +1023,7 @@ pub struct UpdateItemInput {
 	/// String, Number, or Binary (not a set type). These attributes are compared
 	/// against an existing set type attribute of an item. If any elements of the
 	/// input set are present in the item attribute, the expression evaluates to true.
-	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value. 
+	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value.
 	/// _AttributeValueList_ must contain two _AttributeValue_ elements of the same
 	/// type, either String, Number, or Binary (not a set type). A target attribute
 	/// matches if the target value is greater than, or equal to, the first element
@@ -1480,41 +1480,41 @@ pub struct QueryInput {
 	/// For _KeyConditions_, only the following comparison operators are supported:
 	/// `EQ | LE | LT | GE | GT | BEGINS_WITH | BETWEEN`
 	/// The following are descriptions of these comparison operators.
-	///     * `EQ` : Equal. 
+	///     * `EQ` : Equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one specified in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not equal `{"NS":["6", "2", "1"]}`.
-	///     * `LE` : Less than or equal. 
+	///     * `LE` : Less than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `LT` : Less than. 
+	///     * `LT` : Less than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one provided in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GE` : Greater than or equal. 
+	///     * `GE` : Greater than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GT` : Greater than. 
+	///     * `GT` : Greater than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `BEGINS_WITH` : Checks for a prefix. 
+	///     * `BEGINS_WITH` : Checks for a prefix.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String or
 	/// Binary (not a Number or a set type). The target attribute of the comparison
 	/// must be of type String or Binary (not a Number or a set type).
-	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value. 
+	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value.
 	/// _AttributeValueList_ must contain two _AttributeValue_ elements of the same
 	/// type, either String, Number, or Binary (not a set type). A target attribute
 	/// matches if the target value is greater than, or equal to, the first element
@@ -1622,7 +1622,7 @@ pub struct AttributeValueUpdate {
 	/// `DELETE`, and `ADD`. The behavior depends on whether the specified primary key
 	/// already exists in the table.
 	/// **If an item with the specified _Key_ is found in the table:**
-	///   * `PUT` \- Adds the specified attribute to the item. If the attribute already exists, it is replaced by the new value. 
+	///   * `PUT` \- Adds the specified attribute to the item. If the attribute already exists, it is replaced by the new value.
 	///   * `DELETE` \- If no value is specified, the attribute and its value are removed from the item. The data type of the specified value must match the existing value's data type.
 	/// If a _set_ of values is specified, then those values are subtracted from the
 	/// old set. For example, if the attribute value was the set `[a,b,c]` and the
@@ -1640,14 +1640,14 @@ pub struct AttributeValueUpdate {
 	/// not exist. DynamoDB will create the _itemcount_ attribute, set its initial
 	/// value to `0`, and finally add `3` to it. The result will be a new _itemcount_
 	/// attribute in the item, with a value of `3`.
-	///     * If the existing data type is a set, and if the _Value_ is also a set, then the _Value_ is added to the existing set. (This is a _set_ operation, not mathematical addition.) For example, if the attribute value was the set `[1,2]`, and the `ADD` action specified `[3]`, then the final attribute value would be `[1,2,3]`. An error occurs if an Add action is specified for a set attribute and the attribute type specified does not match the existing set type. 
+	///     * If the existing data type is a set, and if the _Value_ is also a set, then the _Value_ is added to the existing set. (This is a _set_ operation, not mathematical addition.) For example, if the attribute value was the set `[1,2]`, and the `ADD` action specified `[3]`, then the final attribute value would be `[1,2,3]`. An error occurs if an Add action is specified for a set attribute and the attribute type specified does not match the existing set type.
 	/// Both sets must have the same primitive data type. For example, if the existing
 	/// data type is a set of strings, the _Value_ must also be a set of strings. The
 	/// same holds true for number sets and binary sets.
 	/// This action is only valid for an existing attribute whose data type is number
 	/// or is a set. Do not use `ADD` for any other data types.
 	/// **If no item with the specified _Key_ is found:**
-	///   * `PUT` \- DynamoDB creates a new item with the specified primary key, and then adds the attribute. 
+	///   * `PUT` \- DynamoDB creates a new item with the specified primary key, and then adds the attribute.
 	///   * `DELETE` \- Nothing happens; there is no attribute to delete.
 	///   * `ADD` \- DynamoDB creates an item with the supplied primary key and number (or set of numbers) for the attribute value. The only data types allowed are number and number set; no other data types can be specified.
 	pub Action: Option<AttributeAction>,
@@ -1702,25 +1702,25 @@ pub struct Condition {
 	/// _AttributeValue_ of a different type than the one provided in the request, the
 	/// value does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`.
 	/// Also, `{"N":"6"}` does not equal `{"NS":["6", "2", "1"]}`.
-	///   * `LE` : Less than or equal. 
+	///   * `LE` : Less than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///   * `LT` : Less than. 
+	///   * `LT` : Less than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one provided in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///   * `GE` : Greater than or equal. 
+	///   * `GE` : Greater than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///   * `GT` : Greater than. 
+	///   * `GT` : Greater than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
@@ -1759,7 +1759,7 @@ pub struct Condition {
 	/// match with any member of the set.
 	/// NOT_CONTAINS is supported for lists: When evaluating "`a NOT CONTAINS b`",
 	/// "`a`" can be a list; however, "`b`" cannot be a set, a map, or a list.
-	///   * `BEGINS_WITH` : Checks for a prefix. 
+	///   * `BEGINS_WITH` : Checks for a prefix.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String or
 	/// Binary (not a Number or a set type). The target attribute of the comparison
 	/// must be of type String or Binary (not a Number or a set type).
@@ -1768,7 +1768,7 @@ pub struct Condition {
 	/// String, Number, or Binary (not a set type). These attributes are compared
 	/// against an existing set type attribute of an item. If any elements of the
 	/// input set are present in the item attribute, the expression evaluates to true.
-	///   * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value. 
+	///   * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value.
 	/// _AttributeValueList_ must contain two _AttributeValue_ elements of the same
 	/// type, either String, Number, or Binary (not a set type). A target attribute
 	/// matches if the target value is greater than, or equal to, the first element
@@ -2112,25 +2112,25 @@ pub struct ExpectedAttributeValue {
 	/// _AttributeValue_ of a different type than the one provided in the request, the
 	/// value does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`.
 	/// Also, `{"N":"6"}` does not equal `{"NS":["6", "2", "1"]}`.
-	///   * `LE` : Less than or equal. 
+	///   * `LE` : Less than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///   * `LT` : Less than. 
+	///   * `LT` : Less than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one provided in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///   * `GE` : Greater than or equal. 
+	///   * `GE` : Greater than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///   * `GT` : Greater than. 
+	///   * `GT` : Greater than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
@@ -2169,7 +2169,7 @@ pub struct ExpectedAttributeValue {
 	/// match with any member of the set.
 	/// NOT_CONTAINS is supported for lists: When evaluating "`a NOT CONTAINS b`",
 	/// "`a`" can be a list; however, "`b`" cannot be a set, a map, or a list.
-	///   * `BEGINS_WITH` : Checks for a prefix. 
+	///   * `BEGINS_WITH` : Checks for a prefix.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String or
 	/// Binary (not a Number or a set type). The target attribute of the comparison
 	/// must be of type String or Binary (not a Number or a set type).
@@ -2178,7 +2178,7 @@ pub struct ExpectedAttributeValue {
 	/// String, Number, or Binary (not a set type). These attributes are compared
 	/// against an existing set type attribute of an item. If any elements of the
 	/// input set are present in the item attribute, the expression evaluates to true.
-	///   * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value. 
+	///   * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value.
 	/// _AttributeValueList_ must contain two _AttributeValue_ elements of the same
 	/// type, either String, Number, or Binary (not a set type). A target attribute
 	/// matches if the target value is greater than, or equal to, the first element
@@ -2340,25 +2340,25 @@ pub struct DeleteItemInput {
 	/// _AttributeValue_ of a different type than the one provided in the request, the
 	/// value does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`.
 	/// Also, `{"N":"6"}` does not equal `{"NS":["6", "2", "1"]}`.
-	///     * `LE` : Less than or equal. 
+	///     * `LE` : Less than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `LT` : Less than. 
+	///     * `LT` : Less than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String,
 	/// Number, or Binary (not a set type). If an item contains an _AttributeValue_
 	/// element of a different type than the one provided in the request, the value
 	/// does not match. For example, `{"S":"6"}` does not equal `{"N":"6"}`. Also,
 	/// `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GE` : Greater than or equal. 
+	///     * `GE` : Greater than or equal.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
 	/// request, the value does not match. For example, `{"S":"6"}` does not equal
 	/// `{"N":"6"}`. Also, `{"N":"6"}` does not compare to `{"NS":["6", "2", "1"]}`.
-	///     * `GT` : Greater than. 
+	///     * `GT` : Greater than.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ element of type
 	/// String, Number, or Binary (not a set type). If an item contains an
 	/// _AttributeValue_ element of a different type than the one provided in the
@@ -2397,7 +2397,7 @@ pub struct DeleteItemInput {
 	/// match with any member of the set.
 	/// NOT_CONTAINS is supported for lists: When evaluating "`a NOT CONTAINS b`",
 	/// "`a`" can be a list; however, "`b`" cannot be a set, a map, or a list.
-	///     * `BEGINS_WITH` : Checks for a prefix. 
+	///     * `BEGINS_WITH` : Checks for a prefix.
 	/// _AttributeValueList_ can contain only one _AttributeValue_ of type String or
 	/// Binary (not a Number or a set type). The target attribute of the comparison
 	/// must be of type String or Binary (not a Number or a set type).
@@ -2406,7 +2406,7 @@ pub struct DeleteItemInput {
 	/// String, Number, or Binary (not a set type). These attributes are compared
 	/// against an existing set type attribute of an item. If any elements of the
 	/// input set are present in the item attribute, the expression evaluates to true.
-	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value. 
+	///     * `BETWEEN` : Greater than or equal to the first value, and less than or equal to the second value.
 	/// _AttributeValueList_ must contain two _AttributeValue_ elements of the same
 	/// type, either String, Number, or Binary (not a set type). A target attribute
 	/// matches if the target value is greater than, or equal to, the first element
@@ -2624,13 +2624,13 @@ pub struct TableDescription {
 	/// given hash key value. Each element is composed of:
 	///   * _Backfilling_ \- If true, then the index is currently in the backfilling phase. Backfilling occurs only when a new global secondary index is added to the table; it is the process by which DynamoDB populates the new index with data from the table. (This attribute does not appear for indexes that were created during a _CreateTable_ operation.)
 	///   * _IndexName_ \- The name of the global secondary index.
-	///   * _IndexSizeBytes_ \- The total size of the global secondary index, in bytes. DynamoDB updates this value approximately every six hours. Recent changes might not be reflected in this value. 
+	///   * _IndexSizeBytes_ \- The total size of the global secondary index, in bytes. DynamoDB updates this value approximately every six hours. Recent changes might not be reflected in this value.
 	///   * _IndexStatus_ \- The current status of the global secondary index:
 	///     * _CREATING_ \- The index is being created.
 	///     * _UPDATING_ \- The index is being updated.
 	///     * _DELETING_ \- The index is being deleted.
 	///     * _ACTIVE_ \- The index is ready for use.
-	///   * _ItemCount_ \- The number of items in the global secondary index. DynamoDB updates this value approximately every six hours. Recent changes might not be reflected in this value. 
+	///   * _ItemCount_ \- The number of items in the global secondary index. DynamoDB updates this value approximately every six hours. Recent changes might not be reflected in this value.
 	///   * _KeySchema_ \- Specifies the complete index key schema. The attribute names in the key schema must be between 1 and 255 characters (inclusive). The key schema must begin with the same hash key attribute as the table.
 	///   * _Projection_ \- Specifies attributes that are copied (projected) from the table into the index. These are in addition to the primary key attributes and index key attributes, which are automatically projected. Each attribute specification is composed of:
 	///     * _ProjectionType_ \- One of the following:
@@ -2638,7 +2638,7 @@ pub struct TableDescription {
 	///       * `INCLUDE` \- Only the specified table attributes are projected into the index. The list of projected attributes are in _NonKeyAttributes_.
 	///       * `ALL` \- All of the table attributes are projected into the index.
 	///     * _NonKeyAttributes_ \- A list of one or more non-key attribute names that are projected into the secondary index. The total count of attributes provided in _NonKeyAttributes_, summed across all of the secondary indexes, must not exceed 20. If you project the same attribute into two different indexes, this counts as two distinct attributes when determining the total.
-	///   * _ProvisionedThroughput_ \- The provisioned throughput settings for the global secondary index, consisting of read and write capacity units, along with data about increases and decreases. 
+	///   * _ProvisionedThroughput_ \- The provisioned throughput settings for the global secondary index, consisting of read and write capacity units, along with data about increases and decreases.
 	/// If the table is in the `DELETING` state, no information about indexes will be
 	/// returned.
 	pub GlobalSecondaryIndexes: Option<GlobalSecondaryIndexDescriptionList>,
@@ -2705,7 +2705,7 @@ pub struct DynamoDBClient<'a> {
 	region: &'a Region
 }
 
-impl<'a> DynamoDBClient<'a> { 
+impl<'a> DynamoDBClient<'a> {
 	pub fn new<P: AWSCredentialsProvider + 'a>(creds: P, region: &'a Region) -> DynamoDBClient<'a> {
 		DynamoDBClient { creds: Box::new(creds), region: region }
 	}
@@ -2731,7 +2731,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: UpdateTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -2766,7 +2766,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: DeleteTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -2830,7 +2830,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: BatchGetItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -2867,7 +2867,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: ScanOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -2895,7 +2895,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: DescribeTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -2954,7 +2954,7 @@ impl<'a> DynamoDBClient<'a> {
 	/// write operation:
 	///   * One or more tables specified in the _BatchWriteItem_ request does not exist.
 	///   * Primary key attributes specified on an item in the request do not match those in the corresponding table's primary key schema.
-	///   * You try to perform multiple operations on the same item in the same _BatchWriteItem_ request. For example, you cannot put and delete the same item in the same _BatchWriteItem_ request. 
+	///   * You try to perform multiple operations on the same item in the same _BatchWriteItem_ request. For example, you cannot put and delete the same item in the same _BatchWriteItem_ request.
 	///   * There are more than 25 requests in the batch.
 	///   * Any individual item in a batch exceeds 400 KB.
 	///   * The total request size exceeds 16 MB.
@@ -2969,7 +2969,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: BatchWriteItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3001,7 +3001,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: CreateTableOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3024,7 +3024,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: ListTablesOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3051,7 +3051,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: GetItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3093,7 +3093,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: QueryOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3135,7 +3135,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: PutItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3163,7 +3163,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: UpdateItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}
@@ -3194,7 +3194,7 @@ impl<'a> DynamoDBClient<'a> {
 		let mut body = String::new();
 		result.read_to_string(&mut body).unwrap();
 		match status {
-			200 => { 
+			200 => {
 				let decoded: DeleteItemOutput = json::decode(&body).unwrap();
 				Ok(decoded)
 			}

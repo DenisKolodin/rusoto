@@ -14,7 +14,7 @@ use openssl::crypto::hash::Type::SHA256;
 use openssl::crypto::hash::hash;
 use openssl::crypto::hmac::hmac;
 use params::Params;
-use rustc_serialize::hex::ToHex;
+use serialize::hex::ToHex;
 use std::ascii::AsciiExt;
 use std::collections::BTreeMap;
 use std::collections::btree_map::Entry;

@@ -475,8 +475,28 @@ impl NoSuchBucketWriter {
 }
 //NEEDS ENUM for ObjectVersionStorageClass
 #[derive(Debug,PartialEq)]
-pub enum ObjectVersionStorageClass{
+pub enum ObjectVersionStorageClass {
 	STANDARD,
+}
+impl fmt::Display for ObjectVersionStorageClass {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ObjectVersionStorageClass::STANDARD => write!(f, "STANDARD"),
+		}
+	}
+}
+impl Default for ObjectVersionStorageClass{
+	fn default() -> ObjectVersionStorageClass{
+		ObjectVersionStorageClass::STANDARD
+	}
+}
+impl From<String> for ObjectVersionStorageClass{
+	fn from(string: String) -> ObjectVersionStorageClass{
+		match string.as_ref() {
+			"STANDARD" => ObjectVersionStorageClass::STANDARD,
+			_ => ObjectVersionStorageClass::default(),
+		}
+	}
 }
 
 /// Parse ObjectVersionStorageClass from response
@@ -497,7 +517,7 @@ impl ObjectVersionStorageClassParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ObjectVersionStorageClass = ObjectVersionStorageClass::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -505,11 +525,11 @@ impl ObjectVersionStorageClassParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ObjectVersionStorageClass::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ObjectVersionStorageClass::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -807,9 +827,31 @@ impl WebsiteRedirectLocationWriter {
 }
 //NEEDS ENUM for BucketVersioningStatus
 #[derive(Debug,PartialEq)]
-pub enum BucketVersioningStatus{
+pub enum BucketVersioningStatus {
 	Enabled,
 	Suspended,
+}
+impl fmt::Display for BucketVersioningStatus {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			BucketVersioningStatus::Enabled => write!(f, "Enabled"),
+			BucketVersioningStatus::Suspended => write!(f, "Suspended"),
+		}
+	}
+}
+impl Default for BucketVersioningStatus{
+	fn default() -> BucketVersioningStatus{
+		BucketVersioningStatus::Enabled
+	}
+}
+impl From<String> for BucketVersioningStatus{
+	fn from(string: String) -> BucketVersioningStatus{
+		match string.as_ref() {
+			"Enabled" => BucketVersioningStatus::Enabled,
+			"Suspended" => BucketVersioningStatus::Suspended,
+			_ => BucketVersioningStatus::default(),
+		}
+	}
 }
 
 /// Parse BucketVersioningStatus from response
@@ -830,7 +872,7 @@ impl BucketVersioningStatusParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : BucketVersioningStatus = BucketVersioningStatus::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -838,11 +880,11 @@ impl BucketVersioningStatusParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = BucketVersioningStatus::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = BucketVersioningStatus::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -1293,8 +1335,28 @@ impl ReplicationConfigurationWriter {
 /// s.html
 //NEEDS ENUM for RequestPayer
 #[derive(Debug,PartialEq)]
-pub enum RequestPayer{
+pub enum RequestPayer {
 	requester,
+}
+impl fmt::Display for RequestPayer {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			RequestPayer::requester => write!(f, "requester"),
+		}
+	}
+}
+impl Default for RequestPayer{
+	fn default() -> RequestPayer{
+		RequestPayer::requester
+	}
+}
+impl From<String> for RequestPayer{
+	fn from(string: String) -> RequestPayer{
+		match string.as_ref() {
+			"requester" => RequestPayer::requester,
+			_ => RequestPayer::default(),
+		}
+	}
 }
 
 /// Parse RequestPayer from response
@@ -1315,7 +1377,7 @@ impl RequestPayerParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : RequestPayer = RequestPayer::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -1323,11 +1385,11 @@ impl RequestPayerParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = RequestPayer::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = RequestPayer::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -1636,9 +1698,31 @@ impl TargetBucketWriter {
 }
 //NEEDS ENUM for MFADeleteStatus
 #[derive(Debug,PartialEq)]
-pub enum MFADeleteStatus{
+pub enum MFADeleteStatus {
 	Enabled,
 	Disabled,
+}
+impl fmt::Display for MFADeleteStatus {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			MFADeleteStatus::Enabled => write!(f, "Enabled"),
+			MFADeleteStatus::Disabled => write!(f, "Disabled"),
+		}
+	}
+}
+impl Default for MFADeleteStatus{
+	fn default() -> MFADeleteStatus{
+		MFADeleteStatus::Enabled
+	}
+}
+impl From<String> for MFADeleteStatus{
+	fn from(string: String) -> MFADeleteStatus{
+		match string.as_ref() {
+			"Enabled" => MFADeleteStatus::Enabled,
+			"Disabled" => MFADeleteStatus::Disabled,
+			_ => MFADeleteStatus::default(),
+		}
+	}
 }
 
 /// Parse MFADeleteStatus from response
@@ -1659,7 +1743,7 @@ impl MFADeleteStatusParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : MFADeleteStatus = MFADeleteStatus::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -1667,11 +1751,11 @@ impl MFADeleteStatusParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = MFADeleteStatus::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = MFADeleteStatus::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -3298,9 +3382,31 @@ impl CommonPrefixListWriter {
 }
 //NEEDS ENUM for Protocol
 #[derive(Debug,PartialEq)]
-pub enum Protocol{
+pub enum Protocol {
 	http,
 	https,
+}
+impl fmt::Display for Protocol {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			Protocol::http => write!(f, "http"),
+			Protocol::https => write!(f, "https"),
+		}
+	}
+}
+impl Default for Protocol{
+	fn default() -> Protocol{
+		Protocol::http
+	}
+}
+impl From<String> for Protocol{
+	fn from(string: String) -> Protocol{
+		match string.as_ref() {
+			"http" => Protocol::http,
+			"https" => Protocol::https,
+			_ => Protocol::default(),
+		}
+	}
 }
 
 /// Parse Protocol from response
@@ -3321,7 +3427,7 @@ impl ProtocolParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : Protocol = Protocol::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -3329,11 +3435,11 @@ impl ProtocolParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = Protocol::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = Protocol::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -3626,11 +3732,37 @@ impl QueueConfigurationWriter {
 }
 //NEEDS ENUM for BucketCannedACL
 #[derive(Debug,PartialEq)]
-pub enum BucketCannedACL{
+pub enum BucketCannedACL {
 	private,
 	public_read,
 	public_read_write,
 	authenticated_read,
+}
+impl fmt::Display for BucketCannedACL {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			BucketCannedACL::private => write!(f, "private"),
+			BucketCannedACL::public_read => write!(f, "public-read"),
+			BucketCannedACL::public_read_write => write!(f, "public-read-write"),
+			BucketCannedACL::authenticated_read => write!(f, "authenticated-read"),
+		}
+	}
+}
+impl Default for BucketCannedACL{
+	fn default() -> BucketCannedACL{
+		BucketCannedACL::private
+	}
+}
+impl From<String> for BucketCannedACL{
+	fn from(string: String) -> BucketCannedACL{
+		match string.as_ref() {
+			"private" => BucketCannedACL::private,
+			"public-read" => BucketCannedACL::public_read,
+			"public-read-write" => BucketCannedACL::public_read_write,
+			"authenticated-read" => BucketCannedACL::authenticated_read,
+			_ => BucketCannedACL::default(),
+		}
+	}
 }
 
 /// Parse BucketCannedACL from response
@@ -3651,7 +3783,7 @@ impl BucketCannedACLParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : BucketCannedACL = BucketCannedACL::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -3659,11 +3791,11 @@ impl BucketCannedACLParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = BucketCannedACL::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = BucketCannedACL::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -3879,9 +4011,31 @@ impl ResponseCacheControlWriter {
 }
 //NEEDS ENUM for FilterRuleName
 #[derive(Debug,PartialEq)]
-pub enum FilterRuleName{
+pub enum FilterRuleName {
 	prefix,
 	suffix,
+}
+impl fmt::Display for FilterRuleName {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			FilterRuleName::prefix => write!(f, "prefix"),
+			FilterRuleName::suffix => write!(f, "suffix"),
+		}
+	}
+}
+impl Default for FilterRuleName{
+	fn default() -> FilterRuleName{
+		FilterRuleName::prefix
+	}
+}
+impl From<String> for FilterRuleName{
+	fn from(string: String) -> FilterRuleName{
+		match string.as_ref() {
+			"prefix" => FilterRuleName::prefix,
+			"suffix" => FilterRuleName::suffix,
+			_ => FilterRuleName::default(),
+		}
+	}
 }
 
 /// Parse FilterRuleName from response
@@ -3902,7 +4056,7 @@ impl FilterRuleNameParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : FilterRuleName = FilterRuleName::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -3910,11 +4064,11 @@ impl FilterRuleNameParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = FilterRuleName::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = FilterRuleName::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -4369,7 +4523,7 @@ impl BucketAlreadyExistsWriter {
 }
 //NEEDS ENUM for BucketLocationConstraint
 #[derive(Debug,PartialEq)]
-pub enum BucketLocationConstraint{
+pub enum BucketLocationConstraint {
 	EU,
 	eu_west_1,
 	us_west_1,
@@ -4380,6 +4534,44 @@ pub enum BucketLocationConstraint{
 	sa_east_1,
 	cn_north_1,
 	eu_central_1,
+}
+impl fmt::Display for BucketLocationConstraint {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			BucketLocationConstraint::EU => write!(f, "EU"),
+			BucketLocationConstraint::eu_west_1 => write!(f, "eu-west-1"),
+			BucketLocationConstraint::us_west_1 => write!(f, "us-west-1"),
+			BucketLocationConstraint::us_west_2 => write!(f, "us-west-2"),
+			BucketLocationConstraint::ap_southeast_1 => write!(f, "ap-southeast-1"),
+			BucketLocationConstraint::ap_southeast_2 => write!(f, "ap-southeast-2"),
+			BucketLocationConstraint::ap_northeast_1 => write!(f, "ap-northeast-1"),
+			BucketLocationConstraint::sa_east_1 => write!(f, "sa-east-1"),
+			BucketLocationConstraint::cn_north_1 => write!(f, "cn-north-1"),
+			BucketLocationConstraint::eu_central_1 => write!(f, "eu-central-1"),
+		}
+	}
+}
+impl Default for BucketLocationConstraint{
+	fn default() -> BucketLocationConstraint{
+		BucketLocationConstraint::EU
+	}
+}
+impl From<String> for BucketLocationConstraint{
+	fn from(string: String) -> BucketLocationConstraint{
+		match string.as_ref() {
+			"EU" => BucketLocationConstraint::EU,
+			"eu-west-1" => BucketLocationConstraint::eu_west_1,
+			"us-west-1" => BucketLocationConstraint::us_west_1,
+			"us-west-2" => BucketLocationConstraint::us_west_2,
+			"ap-southeast-1" => BucketLocationConstraint::ap_southeast_1,
+			"ap-southeast-2" => BucketLocationConstraint::ap_southeast_2,
+			"ap-northeast-1" => BucketLocationConstraint::ap_northeast_1,
+			"sa-east-1" => BucketLocationConstraint::sa_east_1,
+			"cn-north-1" => BucketLocationConstraint::cn_north_1,
+			"eu-central-1" => BucketLocationConstraint::eu_central_1,
+			_ => BucketLocationConstraint::default(),
+		}
+	}
 }
 
 /// Parse BucketLocationConstraint from response
@@ -4400,7 +4592,7 @@ impl BucketLocationConstraintParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : BucketLocationConstraint = BucketLocationConstraint::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -4408,11 +4600,11 @@ impl BucketLocationConstraintParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = BucketLocationConstraint::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = BucketLocationConstraint::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -4746,10 +4938,34 @@ impl VersionIdMarkerWriter {
 }
 //NEEDS ENUM for StorageClass
 #[derive(Debug,PartialEq)]
-pub enum StorageClass{
+pub enum StorageClass {
 	STANDARD,
 	REDUCED_REDUNDANCY,
 	STANDARD_IA,
+}
+impl fmt::Display for StorageClass {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			StorageClass::STANDARD => write!(f, "STANDARD"),
+			StorageClass::REDUCED_REDUNDANCY => write!(f, "REDUCED_REDUNDANCY"),
+			StorageClass::STANDARD_IA => write!(f, "STANDARD_IA"),
+		}
+	}
+}
+impl Default for StorageClass{
+	fn default() -> StorageClass{
+		StorageClass::STANDARD
+	}
+}
+impl From<String> for StorageClass{
+	fn from(string: String) -> StorageClass{
+		match string.as_ref() {
+			"STANDARD" => StorageClass::STANDARD,
+			"REDUCED_REDUNDANCY" => StorageClass::REDUCED_REDUNDANCY,
+			"STANDARD_IA" => StorageClass::STANDARD_IA,
+			_ => StorageClass::default(),
+		}
+	}
 }
 
 /// Parse StorageClass from response
@@ -4770,7 +4986,7 @@ impl StorageClassParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : StorageClass = StorageClass::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -4778,11 +4994,11 @@ impl StorageClassParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = StorageClass::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = StorageClass::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -4882,10 +5098,34 @@ impl CreateBucketConfigurationWriter {
 }
 //NEEDS ENUM for BucketLogsPermission
 #[derive(Debug,PartialEq)]
-pub enum BucketLogsPermission{
+pub enum BucketLogsPermission {
 	FULL_CONTROL,
 	READ,
 	WRITE,
+}
+impl fmt::Display for BucketLogsPermission {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			BucketLogsPermission::FULL_CONTROL => write!(f, "FULL_CONTROL"),
+			BucketLogsPermission::READ => write!(f, "READ"),
+			BucketLogsPermission::WRITE => write!(f, "WRITE"),
+		}
+	}
+}
+impl Default for BucketLogsPermission{
+	fn default() -> BucketLogsPermission{
+		BucketLogsPermission::FULL_CONTROL
+	}
+}
+impl From<String> for BucketLogsPermission{
+	fn from(string: String) -> BucketLogsPermission{
+		match string.as_ref() {
+			"FULL_CONTROL" => BucketLogsPermission::FULL_CONTROL,
+			"READ" => BucketLogsPermission::READ,
+			"WRITE" => BucketLogsPermission::WRITE,
+			_ => BucketLogsPermission::default(),
+		}
+	}
 }
 
 /// Parse BucketLogsPermission from response
@@ -4906,7 +5146,7 @@ impl BucketLogsPermissionParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : BucketLogsPermission = BucketLogsPermission::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -4914,11 +5154,11 @@ impl BucketLogsPermissionParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = BucketLogsPermission::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = BucketLogsPermission::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -6465,12 +6705,40 @@ impl IfUnmodifiedSinceWriter {
 }
 //NEEDS ENUM for Permission
 #[derive(Debug,PartialEq)]
-pub enum Permission{
+pub enum Permission {
 	FULL_CONTROL,
 	WRITE,
 	WRITE_ACP,
 	READ,
 	READ_ACP,
+}
+impl fmt::Display for Permission {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			Permission::FULL_CONTROL => write!(f, "FULL_CONTROL"),
+			Permission::WRITE => write!(f, "WRITE"),
+			Permission::WRITE_ACP => write!(f, "WRITE_ACP"),
+			Permission::READ => write!(f, "READ"),
+			Permission::READ_ACP => write!(f, "READ_ACP"),
+		}
+	}
+}
+impl Default for Permission{
+	fn default() -> Permission{
+		Permission::FULL_CONTROL
+	}
+}
+impl From<String> for Permission{
+	fn from(string: String) -> Permission{
+		match string.as_ref() {
+			"FULL_CONTROL" => Permission::FULL_CONTROL,
+			"WRITE" => Permission::WRITE,
+			"WRITE_ACP" => Permission::WRITE_ACP,
+			"READ" => Permission::READ,
+			"READ_ACP" => Permission::READ_ACP,
+			_ => Permission::default(),
+		}
+	}
 }
 
 /// Parse Permission from response
@@ -6491,7 +6759,7 @@ impl PermissionParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : Permission = Permission::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -6499,11 +6767,11 @@ impl PermissionParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = Permission::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = Permission::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -6603,10 +6871,34 @@ impl GrantsWriter {
 }
 //NEEDS ENUM for ObjectStorageClass
 #[derive(Debug,PartialEq)]
-pub enum ObjectStorageClass{
+pub enum ObjectStorageClass {
 	STANDARD,
 	REDUCED_REDUNDANCY,
 	GLACIER,
+}
+impl fmt::Display for ObjectStorageClass {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ObjectStorageClass::STANDARD => write!(f, "STANDARD"),
+			ObjectStorageClass::REDUCED_REDUNDANCY => write!(f, "REDUCED_REDUNDANCY"),
+			ObjectStorageClass::GLACIER => write!(f, "GLACIER"),
+		}
+	}
+}
+impl Default for ObjectStorageClass{
+	fn default() -> ObjectStorageClass{
+		ObjectStorageClass::STANDARD
+	}
+}
+impl From<String> for ObjectStorageClass{
+	fn from(string: String) -> ObjectStorageClass{
+		match string.as_ref() {
+			"STANDARD" => ObjectStorageClass::STANDARD,
+			"REDUCED_REDUNDANCY" => ObjectStorageClass::REDUCED_REDUNDANCY,
+			"GLACIER" => ObjectStorageClass::GLACIER,
+			_ => ObjectStorageClass::default(),
+		}
+	}
 }
 
 /// Parse ObjectStorageClass from response
@@ -6627,7 +6919,7 @@ impl ObjectStorageClassParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ObjectStorageClass = ObjectStorageClass::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -6635,11 +6927,11 @@ impl ObjectStorageClassParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ObjectStorageClass::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ObjectStorageClass::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -9352,7 +9644,7 @@ println!("current_name is {}", current_name);
 /// Bucket event for which to send notifications.
 //NEEDS ENUM for Event
 #[derive(Debug,PartialEq)]
-pub enum Event{
+pub enum Event {
 	s3_ReducedRedundancyLostObject,
 	s3_ObjectCreated__star,
 	s3_ObjectCreated_Put,
@@ -9362,6 +9654,42 @@ pub enum Event{
 	s3_ObjectRemoved__star,
 	s3_ObjectRemoved_Delete,
 	s3_ObjectRemoved_DeleteMarkerCreated,
+}
+impl fmt::Display for Event {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			Event::s3_ReducedRedundancyLostObject => write!(f, "s3:ReducedRedundancyLostObject"),
+			Event::s3_ObjectCreated__star => write!(f, "s3:ObjectCreated:*"),
+			Event::s3_ObjectCreated_Put => write!(f, "s3:ObjectCreated:Put"),
+			Event::s3_ObjectCreated_Post => write!(f, "s3:ObjectCreated:Post"),
+			Event::s3_ObjectCreated_Copy => write!(f, "s3:ObjectCreated:Copy"),
+			Event::s3_ObjectCreated_CompleteMultipartUpload => write!(f, "s3:ObjectCreated:CompleteMultipartUpload"),
+			Event::s3_ObjectRemoved__star => write!(f, "s3:ObjectRemoved:*"),
+			Event::s3_ObjectRemoved_Delete => write!(f, "s3:ObjectRemoved:Delete"),
+			Event::s3_ObjectRemoved_DeleteMarkerCreated => write!(f, "s3:ObjectRemoved:DeleteMarkerCreated"),
+		}
+	}
+}
+impl Default for Event{
+	fn default() -> Event{
+		Event::s3_ReducedRedundancyLostObject
+	}
+}
+impl From<String> for Event{
+	fn from(string: String) -> Event{
+		match string.as_ref() {
+			"s3:ReducedRedundancyLostObject" => Event::s3_ReducedRedundancyLostObject,
+			"s3:ObjectCreated:*" => Event::s3_ObjectCreated__star,
+			"s3:ObjectCreated:Put" => Event::s3_ObjectCreated_Put,
+			"s3:ObjectCreated:Post" => Event::s3_ObjectCreated_Post,
+			"s3:ObjectCreated:Copy" => Event::s3_ObjectCreated_Copy,
+			"s3:ObjectCreated:CompleteMultipartUpload" => Event::s3_ObjectCreated_CompleteMultipartUpload,
+			"s3:ObjectRemoved:*" => Event::s3_ObjectRemoved__star,
+			"s3:ObjectRemoved:Delete" => Event::s3_ObjectRemoved_Delete,
+			"s3:ObjectRemoved:DeleteMarkerCreated" => Event::s3_ObjectRemoved_DeleteMarkerCreated,
+			_ => Event::default(),
+		}
+	}
 }
 
 /// Parse Event from response
@@ -9382,7 +9710,7 @@ impl EventParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : Event = Event::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -9390,11 +9718,11 @@ impl EventParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = Event::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = Event::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -9750,9 +10078,31 @@ impl NextMarkerWriter {
 }
 //NEEDS ENUM for MetadataDirective
 #[derive(Debug,PartialEq)]
-pub enum MetadataDirective{
+pub enum MetadataDirective {
 	COPY,
 	REPLACE,
+}
+impl fmt::Display for MetadataDirective {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			MetadataDirective::COPY => write!(f, "COPY"),
+			MetadataDirective::REPLACE => write!(f, "REPLACE"),
+		}
+	}
+}
+impl Default for MetadataDirective{
+	fn default() -> MetadataDirective{
+		MetadataDirective::COPY
+	}
+}
+impl From<String> for MetadataDirective{
+	fn from(string: String) -> MetadataDirective{
+		match string.as_ref() {
+			"COPY" => MetadataDirective::COPY,
+			"REPLACE" => MetadataDirective::REPLACE,
+			_ => MetadataDirective::default(),
+		}
+	}
 }
 
 /// Parse MetadataDirective from response
@@ -9773,7 +10123,7 @@ impl MetadataDirectiveParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : MetadataDirective = MetadataDirective::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -9781,11 +10131,11 @@ impl MetadataDirectiveParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = MetadataDirective::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = MetadataDirective::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -9986,9 +10336,31 @@ impl WebsiteConfigurationWriter {
 }
 //NEEDS ENUM for MFADelete
 #[derive(Debug,PartialEq)]
-pub enum MFADelete{
+pub enum MFADelete {
 	Enabled,
 	Disabled,
+}
+impl fmt::Display for MFADelete {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			MFADelete::Enabled => write!(f, "Enabled"),
+			MFADelete::Disabled => write!(f, "Disabled"),
+		}
+	}
+}
+impl Default for MFADelete{
+	fn default() -> MFADelete{
+		MFADelete::Enabled
+	}
+}
+impl From<String> for MFADelete{
+	fn from(string: String) -> MFADelete{
+		match string.as_ref() {
+			"Enabled" => MFADelete::Enabled,
+			"Disabled" => MFADelete::Disabled,
+			_ => MFADelete::default(),
+		}
+	}
 }
 
 /// Parse MFADelete from response
@@ -10009,7 +10381,7 @@ impl MFADeleteParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : MFADelete = MFADelete::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -10017,11 +10389,11 @@ impl MFADeleteParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = MFADelete::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = MFADelete::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -11198,9 +11570,31 @@ impl ObjectNotInActiveTierErrorWriter {
 }
 //NEEDS ENUM for TransitionStorageClass
 #[derive(Debug,PartialEq)]
-pub enum TransitionStorageClass{
+pub enum TransitionStorageClass {
 	GLACIER,
 	STANDARD_IA,
+}
+impl fmt::Display for TransitionStorageClass {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			TransitionStorageClass::GLACIER => write!(f, "GLACIER"),
+			TransitionStorageClass::STANDARD_IA => write!(f, "STANDARD_IA"),
+		}
+	}
+}
+impl Default for TransitionStorageClass{
+	fn default() -> TransitionStorageClass{
+		TransitionStorageClass::GLACIER
+	}
+}
+impl From<String> for TransitionStorageClass{
+	fn from(string: String) -> TransitionStorageClass{
+		match string.as_ref() {
+			"GLACIER" => TransitionStorageClass::GLACIER,
+			"STANDARD_IA" => TransitionStorageClass::STANDARD_IA,
+			_ => TransitionStorageClass::default(),
+		}
+	}
 }
 
 /// Parse TransitionStorageClass from response
@@ -11221,7 +11615,7 @@ impl TransitionStorageClassParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : TransitionStorageClass = TransitionStorageClass::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -11229,11 +11623,11 @@ impl TransitionStorageClassParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = TransitionStorageClass::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = TransitionStorageClass::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -13628,11 +14022,37 @@ impl CodeWriter {
 }
 //NEEDS ENUM for ReplicationStatus
 #[derive(Debug,PartialEq)]
-pub enum ReplicationStatus{
+pub enum ReplicationStatus {
 	COMPLETE,
 	PENDING,
 	FAILED,
 	REPLICA,
+}
+impl fmt::Display for ReplicationStatus {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ReplicationStatus::COMPLETE => write!(f, "COMPLETE"),
+			ReplicationStatus::PENDING => write!(f, "PENDING"),
+			ReplicationStatus::FAILED => write!(f, "FAILED"),
+			ReplicationStatus::REPLICA => write!(f, "REPLICA"),
+		}
+	}
+}
+impl Default for ReplicationStatus{
+	fn default() -> ReplicationStatus{
+		ReplicationStatus::COMPLETE
+	}
+}
+impl From<String> for ReplicationStatus{
+	fn from(string: String) -> ReplicationStatus{
+		match string.as_ref() {
+			"COMPLETE" => ReplicationStatus::COMPLETE,
+			"PENDING" => ReplicationStatus::PENDING,
+			"FAILED" => ReplicationStatus::FAILED,
+			"REPLICA" => ReplicationStatus::REPLICA,
+			_ => ReplicationStatus::default(),
+		}
+	}
 }
 
 /// Parse ReplicationStatus from response
@@ -13653,7 +14073,7 @@ impl ReplicationStatusParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ReplicationStatus = ReplicationStatus::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -13661,11 +14081,11 @@ impl ReplicationStatusParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ReplicationStatus::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ReplicationStatus::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -14646,13 +15066,43 @@ impl MarkerWriter {
 }
 //NEEDS ENUM for ObjectCannedACL
 #[derive(Debug,PartialEq)]
-pub enum ObjectCannedACL{
+pub enum ObjectCannedACL {
 	private,
 	public_read,
 	public_read_write,
 	authenticated_read,
 	bucket_owner_read,
 	bucket_owner_full_control,
+}
+impl fmt::Display for ObjectCannedACL {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ObjectCannedACL::private => write!(f, "private"),
+			ObjectCannedACL::public_read => write!(f, "public-read"),
+			ObjectCannedACL::public_read_write => write!(f, "public-read-write"),
+			ObjectCannedACL::authenticated_read => write!(f, "authenticated-read"),
+			ObjectCannedACL::bucket_owner_read => write!(f, "bucket-owner-read"),
+			ObjectCannedACL::bucket_owner_full_control => write!(f, "bucket-owner-full-control"),
+		}
+	}
+}
+impl Default for ObjectCannedACL{
+	fn default() -> ObjectCannedACL{
+		ObjectCannedACL::private
+	}
+}
+impl From<String> for ObjectCannedACL{
+	fn from(string: String) -> ObjectCannedACL{
+		match string.as_ref() {
+			"private" => ObjectCannedACL::private,
+			"public-read" => ObjectCannedACL::public_read,
+			"public-read-write" => ObjectCannedACL::public_read_write,
+			"authenticated-read" => ObjectCannedACL::authenticated_read,
+			"bucket-owner-read" => ObjectCannedACL::bucket_owner_read,
+			"bucket-owner-full-control" => ObjectCannedACL::bucket_owner_full_control,
+			_ => ObjectCannedACL::default(),
+		}
+	}
 }
 
 /// Parse ObjectCannedACL from response
@@ -14673,7 +15123,7 @@ impl ObjectCannedACLParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ObjectCannedACL = ObjectCannedACL::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -14681,11 +15131,11 @@ impl ObjectCannedACLParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ObjectCannedACL::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ObjectCannedACL::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -15528,9 +15978,31 @@ impl GranteeWriter {
 }
 //NEEDS ENUM for ExpirationStatus
 #[derive(Debug,PartialEq)]
-pub enum ExpirationStatus{
+pub enum ExpirationStatus {
 	Enabled,
 	Disabled,
+}
+impl fmt::Display for ExpirationStatus {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ExpirationStatus::Enabled => write!(f, "Enabled"),
+			ExpirationStatus::Disabled => write!(f, "Disabled"),
+		}
+	}
+}
+impl Default for ExpirationStatus{
+	fn default() -> ExpirationStatus{
+		ExpirationStatus::Enabled
+	}
+}
+impl From<String> for ExpirationStatus{
+	fn from(string: String) -> ExpirationStatus{
+		match string.as_ref() {
+			"Enabled" => ExpirationStatus::Enabled,
+			"Disabled" => ExpirationStatus::Disabled,
+			_ => ExpirationStatus::default(),
+		}
+	}
 }
 
 /// Parse ExpirationStatus from response
@@ -15551,7 +16023,7 @@ impl ExpirationStatusParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ExpirationStatus = ExpirationStatus::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -15559,11 +16031,11 @@ impl ExpirationStatusParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ExpirationStatus::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ExpirationStatus::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -15931,9 +16403,31 @@ impl LambdaFunctionConfigurationListWriter {
 }
 //NEEDS ENUM for ServerSideEncryption
 #[derive(Debug,PartialEq)]
-pub enum ServerSideEncryption{
+pub enum ServerSideEncryption {
 	AES256,
 	aws_kms,
+}
+impl fmt::Display for ServerSideEncryption {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ServerSideEncryption::AES256 => write!(f, "AES256"),
+			ServerSideEncryption::aws_kms => write!(f, "aws:kms"),
+		}
+	}
+}
+impl Default for ServerSideEncryption{
+	fn default() -> ServerSideEncryption{
+		ServerSideEncryption::AES256
+	}
+}
+impl From<String> for ServerSideEncryption{
+	fn from(string: String) -> ServerSideEncryption{
+		match string.as_ref() {
+			"AES256" => ServerSideEncryption::AES256,
+			"aws:kms" => ServerSideEncryption::aws_kms,
+			_ => ServerSideEncryption::default(),
+		}
+	}
 }
 
 /// Parse ServerSideEncryption from response
@@ -15954,7 +16448,7 @@ impl ServerSideEncryptionParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ServerSideEncryption = ServerSideEncryption::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -15962,11 +16456,11 @@ impl ServerSideEncryptionParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ServerSideEncryption::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ServerSideEncryption::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -16625,21 +17119,30 @@ impl UploadIdMarkerWriter {
 }
 //NEEDS ENUM for Payer
 #[derive(Debug,PartialEq)]
-pub enum Payer{
+pub enum Payer {
 	Requester,
 	BucketOwner,
 }
 impl fmt::Display for Payer {
 	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match *self {
-			Requester => write!(f, "Requester"),
-			BucketOwner => write!(f, "BucketOwner"),
+			Payer::Requester => write!(f, "Requester"),
+			Payer::BucketOwner => write!(f, "BucketOwner"),
 		}
 	}
 }
-impl Default for Payer {
-	fn default() -> Payer {
-		Payer::BucketOwner
+impl Default for Payer{
+	fn default() -> Payer{
+		Payer::Requester
+	}
+}
+impl From<String> for Payer{
+	fn from(string: String) -> Payer{
+		match string.as_ref() {
+			"Requester" => Payer::Requester,
+			"BucketOwner" => Payer::BucketOwner,
+			_ => Payer::default(),
+		}
 	}
 }
 
@@ -16661,7 +17164,7 @@ impl PayerParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : Payer = Payer::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -16669,11 +17172,11 @@ impl PayerParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = Payer::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = Payer::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -16725,10 +17228,34 @@ impl PayerWriter {
 }
 //NEEDS ENUM for Type
 #[derive(Debug,PartialEq)]
-pub enum Type{
+pub enum Type {
 	CanonicalUser,
 	AmazonCustomerByEmail,
 	Group,
+}
+impl fmt::Display for Type {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			Type::CanonicalUser => write!(f, "CanonicalUser"),
+			Type::AmazonCustomerByEmail => write!(f, "AmazonCustomerByEmail"),
+			Type::Group => write!(f, "Group"),
+		}
+	}
+}
+impl Default for Type{
+	fn default() -> Type{
+		Type::CanonicalUser
+	}
+}
+impl From<String> for Type{
+	fn from(string: String) -> Type{
+		match string.as_ref() {
+			"CanonicalUser" => Type::CanonicalUser,
+			"AmazonCustomerByEmail" => Type::AmazonCustomerByEmail,
+			"Group" => Type::Group,
+			_ => Type::default(),
+		}
+	}
 }
 
 /// Parse Type from response
@@ -16749,7 +17276,7 @@ impl TypeParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : Type = Type::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -16757,11 +17284,11 @@ impl TypeParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = Type::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = Type::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -18116,8 +18643,28 @@ impl URIWriter {
 /// request.
 //NEEDS ENUM for RequestCharged
 #[derive(Debug,PartialEq)]
-pub enum RequestCharged{
+pub enum RequestCharged {
 	requester,
+}
+impl fmt::Display for RequestCharged {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			RequestCharged::requester => write!(f, "requester"),
+		}
+	}
+}
+impl Default for RequestCharged{
+	fn default() -> RequestCharged{
+		RequestCharged::requester
+	}
+}
+impl From<String> for RequestCharged{
+	fn from(string: String) -> RequestCharged{
+		match string.as_ref() {
+			"requester" => RequestCharged::requester,
+			_ => RequestCharged::default(),
+		}
+	}
 }
 
 /// Parse RequestCharged from response
@@ -18138,7 +18685,7 @@ impl RequestChargedParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : RequestCharged = RequestCharged::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -18146,11 +18693,11 @@ impl RequestChargedParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = RequestCharged::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = RequestCharged::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -18773,8 +19320,28 @@ impl LambdaFunctionConfigurationWriter {
 /// response.
 //NEEDS ENUM for EncodingType
 #[derive(Debug,PartialEq)]
-pub enum EncodingType{
+pub enum EncodingType {
 	url,
+}
+impl fmt::Display for EncodingType {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			EncodingType::url => write!(f, "url"),
+		}
+	}
+}
+impl Default for EncodingType{
+	fn default() -> EncodingType{
+		EncodingType::url
+	}
+}
+impl From<String> for EncodingType{
+	fn from(string: String) -> EncodingType{
+		match string.as_ref() {
+			"url" => EncodingType::url,
+			_ => EncodingType::default(),
+		}
+	}
 }
 
 /// Parse EncodingType from response
@@ -18795,7 +19362,7 @@ impl EncodingTypeParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : EncodingType = EncodingType::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -18803,11 +19370,11 @@ impl EncodingTypeParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = EncodingType::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = EncodingType::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -19243,9 +19810,31 @@ impl CopySourceIfMatchWriter {
 }
 //NEEDS ENUM for ReplicationRuleStatus
 #[derive(Debug,PartialEq)]
-pub enum ReplicationRuleStatus{
+pub enum ReplicationRuleStatus {
 	Enabled,
 	Disabled,
+}
+impl fmt::Display for ReplicationRuleStatus {
+	fn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match *self {
+			ReplicationRuleStatus::Enabled => write!(f, "Enabled"),
+			ReplicationRuleStatus::Disabled => write!(f, "Disabled"),
+		}
+	}
+}
+impl Default for ReplicationRuleStatus{
+	fn default() -> ReplicationRuleStatus{
+		ReplicationRuleStatus::Enabled
+	}
+}
+impl From<String> for ReplicationRuleStatus{
+	fn from(string: String) -> ReplicationRuleStatus{
+		match string.as_ref() {
+			"Enabled" => ReplicationRuleStatus::Enabled,
+			"Disabled" => ReplicationRuleStatus::Disabled,
+			_ => ReplicationRuleStatus::default(),
+		}
+	}
 }
 
 /// Parse ReplicationRuleStatus from response
@@ -19266,7 +19855,7 @@ impl ReplicationRuleStatusParser {
 			},
 		}
 		 // primitive_parser
-		let mut obj : String = String::default();
+		let mut obj : ReplicationRuleStatus = ReplicationRuleStatus::default();
 		match location{
 			None => (), // noop
 			Some(loc) => {
@@ -19274,11 +19863,11 @@ impl ReplicationRuleStatusParser {
 					&ArgumentLocation::Headers => (), // not yet implemented
 					&ArgumentLocation::Body => {
 						// primitive_parser
-						obj = try!(characters(stack));
+						obj = ReplicationRuleStatus::from(try!(characters(stack)));
 					},
 					&ArgumentLocation::Header => {
 						let header_str = try!(get_value_for_header(tag_name.unwrap(), headers));
-						obj = header_str;
+						obj = ReplicationRuleStatus::from(header_str);
 					},
 					&ArgumentLocation::Querystring => (),
 					&ArgumentLocation::Uri => ()
@@ -20176,7 +20765,7 @@ pub struct S3Client<'a> {
 	region: &'a Region
 }
 
-impl<'a> S3Client<'a> {
+impl<'a> S3Client<'a> { 
 	pub fn new<P: AWSCredentialsProvider + 'a>(creds: P, region: &'a Region) -> S3Client<'a> {
 		S3Client { creds: Box::new(creds), region: region }
 	}
@@ -20190,7 +20779,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20200,7 +20789,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(ListObjectVersionsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20221,10 +20810,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20245,10 +20834,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20270,7 +20859,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20280,7 +20869,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(ListObjectsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20300,10 +20889,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20323,10 +20912,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20348,10 +20937,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20372,10 +20961,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20396,7 +20985,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20406,7 +20995,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(UploadPartOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20426,7 +21015,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20436,7 +21025,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(PutObjectOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20456,10 +21045,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20480,10 +21069,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20503,7 +21092,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20513,7 +21102,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketCorsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20533,10 +21122,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20556,7 +21145,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20566,7 +21155,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketAclOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20587,7 +21176,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20597,7 +21186,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketLoggingOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20618,10 +21207,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20641,10 +21230,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20664,10 +21253,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20687,10 +21276,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20710,7 +21299,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20720,7 +21309,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(NotificationConfigurationParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20741,7 +21330,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20751,7 +21340,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(DeleteObjectsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20770,10 +21359,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20793,7 +21382,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20803,7 +21392,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(CopyObjectOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20824,7 +21413,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20834,7 +21423,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(ListBucketsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20859,10 +21448,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20882,10 +21471,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20907,7 +21496,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20917,7 +21506,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(HeadObjectOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20937,10 +21526,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20960,7 +21549,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -20970,7 +21559,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetObjectTorrentOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -20990,7 +21579,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21000,7 +21589,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketLifecycleOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21020,7 +21609,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21030,7 +21619,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(CreateBucketOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21050,7 +21639,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21060,7 +21649,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(CompleteMultipartUploadOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21080,7 +21669,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21090,7 +21679,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketWebsiteOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21111,7 +21700,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21121,7 +21710,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(CreateMultipartUploadOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21143,10 +21732,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21166,7 +21755,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21176,7 +21765,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetObjectOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21196,7 +21785,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21206,7 +21795,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketPolicyOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21226,7 +21815,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21236,7 +21825,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketVersioningOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21256,7 +21845,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21266,7 +21855,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(ListMultipartUploadsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21286,7 +21875,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21296,7 +21885,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketLifecycleConfigurationOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21316,7 +21905,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21326,7 +21915,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketRequestPaymentOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21346,10 +21935,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21369,7 +21958,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21379,7 +21968,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketTaggingOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21402,7 +21991,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21412,7 +22001,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(AbortMultipartUploadOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21433,7 +22022,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21443,7 +22032,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(PutObjectAclOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21463,7 +22052,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21473,7 +22062,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketLocationOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21493,10 +22082,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21516,10 +22105,10 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				Ok(())
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21539,7 +22128,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21549,7 +22138,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(NotificationConfigurationDeprecatedParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21569,7 +22158,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21579,7 +22168,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(ListPartsOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21599,7 +22188,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21609,7 +22198,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetObjectAclOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21629,7 +22218,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21639,7 +22228,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(UploadPartCopyOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21661,7 +22250,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21671,7 +22260,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(DeleteObjectOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21691,7 +22280,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21701,7 +22290,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(RestoreObjectOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21720,7 +22309,7 @@ impl<'a> S3Client<'a> {
 		let status = result.status.to_u16();
 
 		match status {
-			200 => {
+			200 => { 
 				let headers = result.headers.clone();
 				let mut reader = EventReader::new(result);
 				let mut stack = XmlResponseFromAws::new(reader.events().peekable());
@@ -21730,7 +22319,7 @@ impl<'a> S3Client<'a> {
 				let aws_result = try!(GetBucketReplicationOutputParser::parse_response(None, None, &headers, &mut stack));
 				Ok(aws_result)
 			}
-			_ => {
+			_ => { 
 				println!("Error: Status code was {}", status);
 				let mut body = String::new();
 				result.read_to_string(&mut body).unwrap();
@@ -21741,3 +22330,4 @@ impl<'a> S3Client<'a> {
 		}
 	}
 }
+

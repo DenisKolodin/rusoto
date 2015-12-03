@@ -89,17 +89,32 @@ def rust_type(name, shape):
             print '\tfn fmt (&self, f: &mut fmt::Formatter) -> fmt::Result {'
             print '\t\tmatch *self {'
 
-            print '\t\t\tRequester => write!(f, "Requester"),'
-            print '\t\t\tBucketOwner => write!(f, "BucketOwner"),'
+            for e in shape['enum']:
+                print '\t\t\t' + name + '::' + safe_enum_name(e) + ' => write!(f, "' + e + '"),'
+
             print '\t\t}'
             print '\t}'
             print '}'
 
-# impl Default for Payer {
-# 	fn default() -> Payer {
-# 		Payer::BucketOwner
-# 	}
-# }
+            # Default:
+            print 'impl Default for ' + name + '{'
+            print '\tfn default() -> ' + name + '{'
+            print '\t\t' + name + '::' + safe_enum_name(shape['enum'][0]) # first entry, may be a stupid choice
+            print '\t}'
+            print '}'
+
+            # and from string:
+            print 'impl From<String> for ' + name + '{'
+            print '\tfn from(string: String) -> ' + name + '{'
+            print '\t\tmatch string.as_ref() {'
+
+            for e in shape['enum']:
+                print '\t\t\t"' + e + '" => ' + name + '::' + safe_enum_name(e) + ','
+
+            print '\t\t\t_ => ' + name + '::default(),'
+            print '\t\t}'
+            print '\t}'
+            print '}'
 
         else:
             # needs to handle when the rust_type is a reserved keyword
@@ -317,14 +332,11 @@ def map_writer(shape):
 def type_parser(name, shape):
     shape_type = shape['type']
 
-    # TODO: remove this:
-    lifetime_annotation = ''
-
     print "\n/// Parse " + name + " from response"
     print 'struct ' + name + 'Parser;'
     print 'impl ' + name + 'Parser {'
     print '\tfn parse_response<\'a, T: Peek + Next>(tag_name: Option<&str>, location: Option<&ArgumentLocation>, headers: &Headers, stack: &mut T) -> Result<' +\
-          name + lifetime_annotation + ', XmlParseError> {'
+          name + ', XmlParseError> {'
     print '\t\tprintln!("in ' + name + 'Parser");'
 
     if shape_type == 'map':
@@ -355,7 +367,11 @@ def type_parser(name, shape):
             if shape_type == 'blob':
                 print "\t\tlet mut obj : " + primitive_types[shape_type] + " = Vec::with_capacity(1);"
             else:
-                print "\t\tlet mut obj : " + primitive_types[shape_type] + " = " + primitive_types[shape_type] + "::default();"
+                # TODO: map to type, if it's an enum: it has to string and from string
+                if 'enum' in shape:
+                    print "\t\tlet mut obj : " + name + " = " + name + "::default();"
+                else:
+                    print "\t\tlet mut obj : " + primitive_types[shape_type] + " = " + primitive_types[shape_type] + "::default();"
 
             print '\t\tmatch location{'
             print '\t\t\tNone => (), // noop'
@@ -364,22 +380,16 @@ def type_parser(name, shape):
             print '\t\t\t\t\t&ArgumentLocation::Headers => (), // not yet implemented'
             print '\t\t\t\t\t&ArgumentLocation::Body => {'
 
-            # print '\t\t\t\t\t\tmatch tag_name {'
-            # print '\t\t\t\t\t\t\tNone => (),'
-            # print '\t\t\t\t\t\t\tSome(val) => { try!(start_element(val, stack)) ; }, // throw away any result'
-            # print '\t\t\t\t\t\t};'
-
             if shape_type in primitive_parsers:
                 print '\t\t\t\t\t\t// primitive_parser'
                 if shape_type == 'blob':
                     print "\t\t\t\t\t\tobj = Vec::with_capacity(1);"
                 else:
-                    print "\t\t\t\t\t\tobj = " + primitive_parsers[shape_type] + ';'
-
-            # print '\t\t\t\t\t\tmatch tag_name {'
-            # print '\t\t\t\t\t\t\tNone => (),'
-            # print '\t\t\t\t\t\t\tSome(val) => { try!(end_element(val, stack)) ; }, // throw away any result'
-            # print '\t\t\t\t\t\t};'
+                    # TODO: if it's an enum use type::from(primitive_parsers)
+                    if 'enum' in shape:
+                        print "\t\t\t\t\t\tobj = " + name + '::from(' + primitive_parsers[shape_type] + ');'
+                    else:
+                        print "\t\t\t\t\t\tobj = " + primitive_parsers[shape_type] + ';'
 
             print '\t\t\t\t\t},'
 
@@ -390,7 +400,9 @@ def type_parser(name, shape):
             else:
                 print '\t\t\t\t\t&ArgumentLocation::Header => {'
                 print '\t\t\t\t\t\tlet header_str = try!(get_value_for_header(tag_name.unwrap(), headers));'
-                if shape_type == 'string' or primitive_types[shape_type] == 'String':
+                if 'enum' in shape:
+                    print '\t\t\t\t\t\tobj = ' + name + '::from(header_str);'
+                elif shape_type == 'string' or primitive_types[shape_type] == 'String':
                     print '\t\t\t\t\t\tobj = header_str;'
                 else:
                     if shape_type == 'boolean':
@@ -399,7 +411,12 @@ def type_parser(name, shape):
                         print '\t\t\t\t\t\t\tOk(newbool) => newbool,'
                         print '\t\t\t\t\t\t}'
                     else:
-                        print '\t\t\t\t\t\tobj = try!(' + primitive_types[shape_type] + '::from_str(&header_str));'
+                        # TODO: if it's an enum use type::from(primitive_parsers)
+                        if 'enum' in shape:
+                            print '\t\t\t\t\t\tobj = ' + name + '::from(try!(' + primitive_types[shape_type] + '::from_str(&header_str)));'
+                        else:
+                            print '\t\t\t\t\t\tobj = try!(' + primitive_types[shape_type] + '::from_str(&header_str));'
+
                 print '\t\t\t\t\t},'
 
             print '\t\t\t\t\t&ArgumentLocation::Querystring => (),'
